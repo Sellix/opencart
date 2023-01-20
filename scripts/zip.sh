@@ -1,9 +1,9 @@
 #!/bin/sh
 
 cd opencart3
-zip -r ../opencart3-sellixpay.zip *
+zip -r ../packages/opencart3/sellixpay.ocmod.zip *
 cd ..
 
 cd opencart4
-zip -r ../opencart4-sellixpay.zip *
+zip -r ../packages/opencart4/sellixpay.ocmod.zip *
 cd ..
