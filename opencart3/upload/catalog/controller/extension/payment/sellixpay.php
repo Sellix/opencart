@@ -144,7 +144,7 @@ class ControllerExtensionPaymentSellixpay extends Controller {
         $this->model_extension_payment_sellixpay->log($data);
         
         try {
-            if (!isset($data['data']['uniqid']) || empty($data['data']['uniqid'])) {
+            if (!isset($data['data']['uniqid'] || empty($data['data']['uniqid']))) {
                 throw new \Exception(sprintf('Sellixpay: suspected fraud. Code-001'));
             }
             
