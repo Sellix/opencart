@@ -42,6 +42,7 @@ $_['entry_usdc_bep20']                  = 'USDC:BEP20';
 $_['entry_binance_pay']			= 'Binance Pay (BUSD)';
 $_['entry_skrill']			= 'Skrill';
 $_['entry_perfectmoney']		= 'PerfectMoney';
+$_['entry_cashapp']                     = 'Cash App';
 
 $_['error_select_gateway']              = 'Please select a Sellix payment method';
 

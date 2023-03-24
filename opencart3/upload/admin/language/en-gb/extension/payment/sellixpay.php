@@ -24,6 +24,7 @@ $_['entry_desc'] = 'Description';
 $_['entry_debug'] = 'Debug';
 $_['entry_layout'] = 'Radio Box Layout';
 $_['entry_confirmations'] = 'Number of confirmations for crypto currencies';
+$_['entry_url_branded'] = 'Branded URL';
 
 
 $_['entry_bitcoin']			= 'Bitcoin (BTC)';
@@ -50,6 +51,7 @@ $_['entry_usdc_bep20']                  = 'USDC:BEP20';
 $_['entry_binance_pay']			= 'Binance Pay (BUSD)';
 $_['entry_skrill']			= 'Skrill';
 $_['entry_perfectmoney']		= 'PerfectMoney';
+$_['entry_cashapp']                     = 'Cash App';
 
 
 // Help hints
@@ -62,6 +64,7 @@ $_['help_layout']  = 'Default layout is dropdown';
 $_['help_confirmations']   = 'The default of 1 is advised for both speed and security';
 $_['help_usdt']  = 'You have to select one from below USDT:ERC20 , USDT:BEP20 OR USDT:TRC20 if enable usdt';
 $_['help_usdc']   = 'You have to select one from below USDC:ERC20 OR USDC:BEP20 if enable usdc';
+$_['help_url_branded']   = 'If this is enabled, customer will be redirected to your branded sellix pay checkout url';
 
 // Order page - payment tab
 $_['text_payment_info']              = 'Payment information';
