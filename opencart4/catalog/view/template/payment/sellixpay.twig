@@ -1,42 +1,7 @@
   <fieldset>
     <legend>{{ sellixpay_title }}</legend>
-    <input type="hidden" id="sellixpay_layout" value="{{ sellixpay_layout }}" />
     <input type="hidden" id="error_select_gateway" value="{{ error_select_gateway }}" />
     <p><strong>{{ sellixpay_description }}</strong></p>
-    <div class="border rounded p-3 mb-3 sellix-payment-gateway-form" id="sellixpay-payment-form">
-        {% if sellixpay_layout %}
-        <div style="width:100%" class="required">
-            <label class="col-sm-12 control-label sellix_gateway-select-label mb-1 p-2" for="sellixpay_gateway">{{ entry_select_sellix_gateway }}</label>
-            <div class="col-sm-12">
-                {% for payment_method in payment_methods %}    
-                    {% if payment_method.active %}
-                        <div class="payment-labels-container">
-                            <div class="payment-labels sellixpay-{{ payment_method.id }}">
-                                <label class="sellixpay-{{ payment_method.id }}-label">
-                                    <input type="radio" name="sellixpay_gateway" value="{{ payment_method.value }}" />
-                                    <img src="{{ module_path }}{{ payment_method.img }}.png" title="{{ payment_method.label }}" alt="{{ payment_method.label }}" style="border-radius: 0px;" width="20" height="20"> {{ payment_method.label }}
-                                </label>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-        {% else %}    
-        <div style="width:100%">
-             <label class="col-sm-12 control-label mb-2" for="sellixpay_gateway">{{ entry_select_sellix_gateway }}</label>
-            <div class="col-sm-12">
-                <select name="sellixpay_gateway" id="sellixpay_gateway" class="form-control">
-                {% for payment_method in payment_methods %}    
-                    {% if payment_method.active %}
-                      <option value="{{ payment_method.value }}" >{{ payment_method.label }}</option>
-                    {% endif %}
-                {% endfor %}
-                </select>
-            </div>
-        </div>
-        {% endif %}    
-    </div>
     <div class="d-inline-block pt-2 pd-2 w-100 text-end">
         <button type="button" id="button-confirm" class="btn btn-primary">{{ button_confirm }}</button>
     </div>
@@ -44,28 +9,12 @@
 <script type="text/javascript"><!--
 $('#button-confirm').on('click', function() {
     var element = this;
-    
-    var isValid = false;
-    var payment_gateway = '';
-    var error_select_gateway = $('#error_select_gateway').val();
-    var radio_layout = $('#sellixpay_layout').val();
-    if (radio_layout == 1) {
-        if ($('input[name="sellixpay_gateway"]:checked').length == 0 ) {
-            $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + error_select_gateway + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-        } else {
-            payment_gateway = $('input[name="sellixpay_gateway"]:checked').val();
-            isValid = true;
-        }
-    } else {
-        isValid = true;
-        payment_gateway = $('select[name="sellixpay_gateway"]').val();
-    }
+    var isValid = true;
 
     if (isValid) {
         $.ajax({
             url: 'index.php?route=extension/sellixpay/payment/sellixpay|send',
             type: 'post',
-            data: 'payment_gateway='+payment_gateway,
             dataType: 'json',
             cache: false,
             beforeSend: function() {
@@ -88,147 +37,3 @@ $('#button-confirm').on('click', function() {
     }
 });
 //--></script>
-
-<style>
-    #sellixpay-payment-form fieldset{
-        width: 100%;
-    }
-    .sellix_gateway-select-label {
-
-    }
-    .sellix-payment-gateway-form .payment-labels-container {
-        width: 50%;
-        padding: 5px 5px;
-        box-sizing: border-box;
-        float: left;
-    }
-
-    .sellix-payment-gateway-form {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        margin: 0 -5px;
-    }
-
-    .sellix-payment-gateway-form label.sellix-payment-gateway-label {
-        width: 100%;
-    }
-
-    .sellix-payment-gateway-label-title {
-        margin: 0 4px;
-        font-weight: 600;
-    }
-
-    .payment-usdt-main, .payment-usdc-main {
-        width: 100%;
-    } 
-
-    .sellix-payment-gateway-form .payment-labels {
-        background: #ebebeb;
-        padding: 5px 8px;
-        border-radius: 5px;
-    }
-
-    select.sellix-payment-gateway-select {
-        height: 40px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-    }
-
-    li.wc_payment_method.payment_method_sellix {
-        background-color: #f5f5f5;
-        margin: 0;
-        font-family: "Source Sans Pro","HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
-    }
-
-    li.wc_payment_method.payment_method_sellix > label {
-        display: block;
-        padding: 1.41575em;
-        cursor: pointer;
-        margin: 0;
-        display: flex !important;
-        align-items: center;
-    }
-
-    .payment_method_sellix .payment_box.payment_method_sellix {
-        background-color: #fafafa !important;
-        padding: 1.41575em !important;
-        padding-top: 18px !important;
-        margin-top: 0 !important;
-    }
-    .payment_method_sellix .payment_box.payment_method_sellix:before {
-        display: none !important;
-    }
-
-    .sellix-payment-gateway-form .payment-labels img {
-        float: right;
-        border: 0;
-        padding: 0;
-        max-height: 20px;
-        order: 2;
-        margin-left: auto !important;
-    }
-
-    .sellix-payment-gateway-form .payment-labels > label {
-        margin-bottom: 0;
-        display: flex !important;
-        align-items: center;
-        font-size: 14px;
-        line-height: normal;
-        word-break: break-word;
-        font-weight: 400;
-        font-family: sans-serif;
-    }
-
-    .payment_method_sellix .sellix-payment-gateway-form > p {
-        font-size: 15px;
-        color: #6d6d6d;
-    }
-    li.wc_payment_method.payment_method_sellix > label img {
-        max-width: 24px;
-        margin-left: auto !important;
-    }
-    .sellix-payment-gateway-form .payment-labels > label input[type="radio"] {
-        margin-right: 5px;
-        outline: none;
-    }
-    li.wc_payment_method.payment_method_sellix input.input-radio[name=payment_method]+label::before {
-        background: #555;
-        box-shadow: 0 0 0 2px #6d6d6d;
-        content: "" !important;
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        border: 2px solid #fff;
-        box-shadow: 0 0 0 2px #6d6d6d;
-        margin-left: 4px;
-        margin-right: 1.2rem;
-        border-radius: 100%;
-        -webkit-transform: translateY(2px);
-        -ms-transform: translateY(2px);
-        transform: translateY(2px);
-        padding: 0;
-        overflow: hidden;
-    }
-
-    body.theme-storefront.right-sidebar .sellix-payment-gateway-form .payment-labels > label {
-        font-size: 13px;
-    }
-
-    @media (max-width: 1100px) {
-        .sellix-payment-gateway-form .payment-labels-container {
-            width: 100%;
-        }
-    }
-    @media (max-width: 767px) {
-        .sellix-payment-gateway-form .payment-labels-container {
-            width: 50%;
-        }
-    }
-    @media (max-width: 500px) {
-        .sellix-payment-gateway-form .payment-labels-container {
-            width: 100%;
-            padding: 5px 0;
-        }
-    }
-</style>

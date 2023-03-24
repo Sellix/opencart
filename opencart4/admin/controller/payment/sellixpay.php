@@ -23,12 +23,6 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
                 $data['error_warning'] = '';
         }
 
-        if (isset($this->error['email'])) {
-                $data['error_email'] = $this->error['email'];
-        } else {
-                $data['error_email'] = '';
-        }
-
         if (isset($this->error['api_key'])) {
                 $data['error_api_key'] = $this->error['api_key'];
         } else {
@@ -62,12 +56,6 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->getNewOrderStatuses($this->model_localisation_order_status->getOrderStatuses());
 
-        if (isset($this->request->post['payment_sellixpay_email'])) {
-                $data['payment_sellixpay_email'] = $this->request->post['payment_sellixpay_email'];
-        } else {
-                $data['payment_sellixpay_email'] = $this->config->get('payment_sellixpay_email');
-        }
-
         if (isset($this->request->post['payment_sellixpay_api_key'])) {
                 $data['payment_sellixpay_api_key'] = $this->request->post['payment_sellixpay_api_key'];
         } else {
@@ -100,6 +88,12 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
         } else {
                 $data['payment_sellixpay_status'] = $this->config->get('payment_sellixpay_status');
         }
+        
+        if (isset($this->request->post['payment_sellixpay_url_branded'])) {
+                $data['payment_sellixpay_url_branded'] = $this->request->post['payment_sellixpay_url_branded'];
+        } else {
+                $data['payment_sellixpay_url_branded'] = $this->config->get('payment_sellixpay_url_branded');
+        }
 
         if (isset($this->request->post['payment_sellixpay_sort_order'])) {
                 $data['payment_sellixpay_sort_order'] = $this->request->post['payment_sellixpay_sort_order'];
@@ -126,29 +120,6 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
                 $data['payment_sellixpay_debug'] = $this->config->get('payment_sellixpay_debug');
         }
 
-        if (isset($this->request->post['payment_sellixpay_layout'])) {
-                $data['payment_sellixpay_layout'] = $this->request->post['payment_sellixpay_layout'];
-        } else {
-                $data['payment_sellixpay_layout'] = $this->config->get('payment_sellixpay_layout');
-        }
-
-        if (isset($this->request->post['payment_sellixpay_confirmations'])) {
-                $data['payment_sellixpay_confirmations'] = $this->request->post['payment_sellixpay_confirmations'];
-        } else {
-                $data['payment_sellixpay_confirmations'] = $this->config->get('payment_sellixpay_confirmations');
-        }
-
-        $methods = $this->getPaymentMethods();
-        foreach ($methods as $method) {
-            $key = $method['id'];
-            if (isset($this->request->post['payment_sellixpay_'.$key])) {
-                $data['payment_sellixpay'][$key] = $this->request->post['payment_sellixpay_'.$key];
-            } else {
-                $data['payment_sellixpay'][$key] = $this->config->get('payment_sellixpay_'.$key);
-            }
-        }
-        $data['payment_methods'] = $methods;
-
         //Defaults
         if (empty($data['payment_sellixpay_title'])) {
             $data['payment_sellixpay_title'] = 'Sellix Pay';
@@ -158,9 +129,6 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
         }
         if (empty($data['payment_sellixpay_prefix'])) {
             $data['payment_sellixpay_prefix'] = 'Order #';
-        }
-        if (empty($data['payment_sellixpay_confirmations'])) {
-            $data['payment_sellixpay_confirmations'] = 1;
         }
 
         $data['header'] = $this->load->controller('common/header');
@@ -175,167 +143,11 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
         if (!$this->user->hasPermission('modify', 'extension/sellixpay/payment/sellixpay')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
-
-        if (isset($this->request->post['payment_sellixpay_email']) && !$this->request->post['payment_sellixpay_email']) {
-                $this->error['email'] = $this->language->get('error_email');
-        }
-
+        
         if (isset($this->request->post['payment_sellixpay_api_key']) && !$this->request->post['payment_sellixpay_api_key']) {
                 $this->error['api_key'] = $this->language->get('error_api_key');
         }
         return !$this->error;
-    }
-    
-    public function getPaymentMethods()
-    {
-        $this->load->language('extension/payment/sellixpay');
-        $list = array(
-            array(
-                'id' => 'bitcoin',
-                'value' => 'BITCOIN',
-                'label' => $this->language->get('entry_bitcoin'),
-                'img' => 'bitcoin'
-            ),
-            array(
-                'id' => 'ethereum',
-                'value' => 'EUTHEREUM',
-                'label' => $this->language->get('entry_ethereum'),
-                'img' => 'ethereum'
-            ),
-            array(
-                'id' => 'bitcoin_cash',
-                'value' => 'BITCOINCASH',
-                'label' => $this->language->get('entry_bitcoin_cash'),
-                'img' => 'bitcoin-cash'
-            ),
-            array(
-                'id' => 'litecoin',
-                'value' => 'LITECOIN',
-                'label' => $this->language->get('entry_litecoin'),
-                'img' => 'litecoin'
-            ),
-            array(
-                'id' => 'concordium',
-                'value' => 'CONCORDIUM',
-                'label' => $this->language->get('entry_concordium'),
-                'img' => 'concordium'
-            ),
-            array(
-                'id' => 'tron',
-                'value' => 'TRON',
-                'label' => $this->language->get('entry_tron'),
-                'img' => 'tron'
-            ),
-            array(
-                'id' => 'nano',
-                'value' => 'NANO',
-                'label' => $this->language->get('entry_nano'),
-                'img' => 'nano'
-            ),
-            array(
-                'id' => 'monero',
-                'value' => 'MONERO',
-                'label' => $this->language->get('entry_monero'),
-                'img' => 'monero'
-            ),
-            array(
-                'id' => 'ripple',
-                'value' => 'RIPPLE',
-                'label' => $this->language->get('entry_ripple'),
-                'img' => 'ripple'
-            ),
-            array(
-                'id' => 'solana',
-                'value' => 'SOLANA',
-                'label' => $this->language->get('entry_solana'),
-                'img' => 'solana'
-            ),
-            array(
-                'id' => 'cronos',
-                'value' => 'CRONOS',
-                'label' => $this->language->get('entry_cronos'),
-                'img' => 'cronos'
-            ),
-            array(
-                'id' => 'binance_coin',
-                'value' => 'BINANCE_COIN',
-                'label' => $this->language->get('entry_binance_coin'),
-                'img' => 'binance'
-            ),
-            array(
-                'id' => 'paypal',
-                'value' => 'PAYPAL',
-                'label' => $this->language->get('entry_paypal'),
-                'img' => 'paypal'
-            ),
-            array(
-                'id' => 'stripe',
-                'value' => 'STRIPE',
-                'label' => $this->language->get('entry_stripe'),
-                'img' => 'stripe'
-            ),
-            array(
-                'id' => 'usdt',
-                'value' => '',
-                'label' => $this->language->get('entry_usdt'),
-                'img' => ''
-            ),
-            array(
-                'id' => 'usdt_erc20',
-                'value' => 'USDT:ERC20',
-                'label' => $this->language->get('entry_usdt_erc20'),
-                'img' => 'usdt'
-            ),
-            array(
-                'id' => 'usdt_bep20',
-                'value' => 'USDT:BEP20',
-                'label' => $this->language->get('entry_usdt_bep20'),
-                'img' => 'usdt'
-            ),
-            array(
-                'id' => 'usdt_trc20',
-                'value' => 'USDT:TRC20',
-                'label' => $this->language->get('entry_usdt_trc20'),
-                'img' => 'usdt'
-            ),
-            array(
-                'id' => 'usdc',
-                'value' => '',
-                'label' => $this->language->get('entry_usdc'),
-                'img' => ''
-            ),
-            array(
-                'id' => 'usdc_erc20',
-                'value' => 'USDC:ERC20',
-                'label' => $this->language->get('entry_usdc_erc20'),
-                'img' => 'usdc'
-            ),
-            array(
-                'id' => 'usdc_bep20',
-                'value' => 'USDC:BEP20',
-                'label' => $this->language->get('entry_usdc_bep20'),
-                'img' => 'usdc'
-            ),
-            array(
-                'id' => 'binance_pay',
-                'value' => 'BINANCE_PAY',
-                'label' => $this->language->get('entry_binance_pay'),
-                'img' => 'binance'
-            ),
-            array(
-                'id' => 'skrill',
-                'value' => 'SKRILL',
-                'label' => $this->language->get('entry_skrill'),
-                'img' => 'skrill'
-            ),
-            array(
-                'id' => 'perfectmoney',
-                'value' => 'PERFECTMONEY',
-                'label' => $this->language->get('entry_perfectmoney'),
-                'img' => 'pm'
-            ),
-        );
-        return $list;
     }
     
     public function getNewOrderStatuses($statuses) {
