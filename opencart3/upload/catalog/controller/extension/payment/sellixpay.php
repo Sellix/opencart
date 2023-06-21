@@ -249,6 +249,7 @@ class ControllerExtensionPaymentSellixpay extends Controller {
             'webhook' => $webhook_url,
             'email' => $order_info['email'],
             'value' => $total,
+            'origin' => 'OPENCART',
         ];
 
         $route = "/v1/payments";

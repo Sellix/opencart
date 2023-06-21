@@ -244,6 +244,7 @@ class Sellixpay extends \Opencart\System\Engine\Controller {
             'webhook' => $this->url->link('extension/sellixpay/payment/sellixpay|webhook', 'order_id='.$order_id, true),
             'email' => $order_info['email'],
             'value' => $total,
+            'origin' => 'OPENCART',
         ];
 
         $route = "/v1/payments";

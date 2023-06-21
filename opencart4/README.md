@@ -20,3 +20,6 @@ Sellix Pay Opencart 4 extension
 = 1.0.3 =
 - Removed layout selection, confirmations, sellix payment gateways enable/disable, and email configuration fields
 - Removed sellix payment gateway selection UI in the frontend.
+
+= 1.0.4 =
+- Added Origin Param
